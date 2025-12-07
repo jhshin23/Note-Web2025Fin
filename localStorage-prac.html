@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 
+        로컬스토리지 저장, 값 가져오기, 새로고침해도 유지, 삭제하고 새로 고치는 버튼
+    -->
+    <title>로컬스토리지 연습</title>
+    <script>
+        function store(key, value) {
+            if(!window.localStorage) {
+                return;
+            }
+            localStorage.setItem(key, value);
+        }
+        function retrieve(key) {
+            if(!window.localStorage) {
+                return;
+            }
+            return localStorage.getItem(key);
+        }
+        function initVisit() {
+            if(!window.localStorage) {
+                return;
+            }
+            localStorage.removeItem("username");
+            location.reload();
+        }
+    </script>
+</head>
+<body>
+    <h3 id="welcome"></h3>
+    <input type="button" value="이름 초기화" onclick="initVisit()">
+    <script>
+        let username = retrieve("username");
+        if (username == null) {
+            username = prompt("이름을 입력하세요: ","");
+            store("username", username);
+        }
+        document.getElementById("welcome").innerHTML = `안녕하세요, ${username}님!`;
+    </script>
+</body>
+</html>
