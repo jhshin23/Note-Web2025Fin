@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 
+        최초 접속 이름 묻기, 저장 후 인사말, 재접속 기억, 버튼으로 새로고침->다시 이름 묻기
+    -->
+    <title>쿠키 연습</title>
+    <script>
+        function GetCookie(key) {
+            let pairs = document.cookie.split(";");
+            for(let i = 0 ; i < pairs.length ; i++) {
+                let pair = pairs[i].trim();
+                let unit = pair.split("=");
+                if(key == unit[0].trim()) {
+                    return decodeURIComponent(unit[1].trim());  //key 값
+                }
+            }
+            return null; //key username의 value가 없음, 첫방문
+        }
+        function SetCookie(key, value, expireDate) {
+            let cookieStr = key + "=" + encodeURIComponent(value) + 
+                ((expireDate == null)?"":("; expires=" + expireDate.toUTCString()));
+            document.cookie = cookieStr;
+        }
+        function ExpireCookie(key) {
+            document.cookie = `${key}=;max-age=0`; 
+        }
+        function logout() {
+            ExpireCookie("username");
+            location.reload();
+        }
+
+    </script>
+</head>
+<body>
+    <h3 id="welcome"></h3>
+    <button onclick="logout()">로그아웃</button>
+    <script>
+        let username = GetCookie("username");
+        if(username == null) {
+            username = prompt("이름을 입력하세요:","");
+            let expire = new Date();
+            expire.setTime(expire.getTime() + (365*24*3600*1000));
+            SetCookie("username", username, expire);
+        }
+        document.getElementById("welcome").innerHTML = `안녕하세요, ${username}님! 반갑습니다.`;
+    </script>
+</body>
+</html>
