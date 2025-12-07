@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 
+        세션스토리지 저장, 값 가져오기, 새로고침해도 유지, 탭 끄면 없어짐
+    -->
+    <title>세션스토리지 연습</title>
+    <script>
+        function store(key, value) {
+            if(!window.sessionStorage) {
+                return;
+            }
+            sessionStorage.setItem(key, value);
+        }
+        function retrieve(key) {
+            if(!window.sessionStorage) {
+                return;
+            }
+            return sessionStorage.getItem(key);
+        }
+    </script>
+</head>
+<body>
+    <h3 id="welcome"></h3>
+    <script>
+        let username = retrieve("username");
+        if (username == null) {
+            username = prompt("이름을 입력하세요: ","");
+            store("username", username);
+        }
+        document.getElementById("welcome").innerHTML = `안녕하세요, ${username}님!`;
+    </script>
+</body>
+</html>
