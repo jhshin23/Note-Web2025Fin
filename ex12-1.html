@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 
+        이름, 방문 회수 표시
+        첫 방문 시 이름 입력 받기
+        쿠키 만료일을 방문시점 +1년으로 저장
+        func: 
+            GetCookie(Name): 쿠키 문자열을 분해, Name의 Value를 decode 후 리턴
+            SetCookie(Name, Value, expireDate): 쿠키에 "Name = Value; expires = expireDate.문자열" 저장,
+                expireDate이 null이면 expire = ""
+        let:
+            username: 쿠키의 Name, Value는 방문자 이름
+            count: 쿠키의 Name, Value는 방문 회수
+            expire: Date 객체, 쿠키의 만료 시점, expires의 Value 
+    -->
+    <title>방문 카운트 쿠키</title> 
+    <script>
+        function GetCookie(Name) {
+            let pairs = document.cookie.split(";");
+            for(let i = 0 ; i < pairs.length ; i++) {
+                let pair = pairs[i].trim();
+                let unit = pair.split("=");
+                if(Name == unit[0].trim()) {
+                    return decodeURIComponent(unit[1].trim());  //Name의 짝
+                }
+            }
+            return null; //Name username이나 count의 Value가 없음, 첫방문
+        }
+        function SetCookie(Name, Value, expireDate) {
+            let cookieStr = Name + "=" + encodeURIComponent(Value) + 
+                ((expireDate == null)?"":("; expires=" + expireDate.toUTCString()));
+            document.cookie = cookieStr;
+        }
+    </script>
+</head>
+<body>
+    <script>
+        let username = GetCookie("username");
+        let count = GetCookie("count");
+        let expire = new Date();
+        if(username == null) {
+            //0회 방문자, 이름 받기
+            count = 0;
+            username = prompt("이름을 입력해 주십시오", "");
+            if(username == null) {
+                //이름을 입력하지 않아, 기본값 넣기
+                username = "아무개";
+            }
+            else {
+                expire.setTime(expire.getTime() + (365*24*3600*1000)); //최초 방문 시점에 1년 더하기
+            }
+            //이름 쿠키 저장
+            SetCookie("username", username, expire);
+        }
+        //이름 쿠키가 저장된 후 방문 회수 쿠키 설정, 값 +1, 만료 시점 설정, 쿠키 저장, 표시 
+        count++;
+        expire.setTime(expire.getTime() + (365*24*3600*1000)); //이번 방문 시점에 1년 더하기
+        SetCookie("count", count, expire);
+        document.write(`<h3>어서오십시오! ${username}님의 ${count}째 방문을 환영합니다!</h3><br>`);
+    </script>
+</body>
+</html>
