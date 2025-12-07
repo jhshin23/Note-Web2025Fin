@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 
+        스토리지 이벤트
+        웹스토리지 변경내용을 다른 창에서 표시
+        로컬 스토리지에 키와 값 저장
+        키로 검색, 값 불러오기 
+
+    -->
+    <title>로컬 스토리지에 StorageEvent</title>
+</head>
+<body>
+    <h3>로컬 스토리지에 StorageEvent</h3>
+    <hr>
+    품목명: <input type="text" name="" id="item">
+    개수: <input type="text" name="" id="count">
+    <input type="button" value="저장" id="save" onclick="store()">
+    <input type="button" value="검색" id="retrieve" onclick="retrieve()">
+    <br>로컬 스토리지의 변경 내용: <br>
+    <textarea name="" id="textarea" cols="60" rows="6"></textarea>
+    <script>
+        window.addEventListener("storage", storageEventListener, false);
+
+        function storageEventListener(e) {
+            let eventDetail = `key: ${e.key}
+            oldValue: ${e.oldValue}
+            newValue: ${e.newValue}
+            storageArea: ${e.storageArea}
+            url: ${e.url}
+            `;
+            document.getElementById("textarea").innerHTML = eventDetail;
+        }
+        let item = document.getElementById("item");
+        let count = document.getElementById("count");
+        function store() {
+            if(!window.localStorage) {
+                return;
+            }
+            localStorage.setItem(item.value, count.value);
+        }
+        function retrieve() {
+            if(!window.localStorage) {
+                return;
+            }
+            let val = localStorage.getItem(item.value);
+            if (val == null)
+                alert(`${item.value}는 구입 리스트에 없습니다.`);
+            else
+                count.value = val;
+        }
+    </script>
+</body>
+</html>
